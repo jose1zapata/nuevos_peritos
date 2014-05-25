@@ -1,0 +1,18 @@
+---> Se ha abierto el archivo XML
+--->Se ha instalado exitosamente BDE Administrator
+--->Iniciando la instalación de MySQL 5.0
+--->C:\Windows\system32\cmd.exe /c C: & cd.. & cd.. & cd.. & cd.. & cd.. & cd.. & cd.. & cd.. & cd.. & cd.. & cd C:\Users\Mirlay\Desktop\nuevos peritos\instalador\archivos\MySQL5.0 & start /wait mysql-essential-5.0.45-win32.msi /quiet /norestart
+--->Se ha instalado exitosamente MySQL 5.0
+--->Iniciando la configuración de la instancia de MySQL 5.0
+--->C:\Windows\system32\cmd.exe /c C: & cd.. & cd.. & cd.. & cd.. & cd.. & cd.. & cd.. & cd.. & cd.. & cd.. & cd C:\Program Files & cd MySQL & cd MySQL Server 5.0 & cd bin &  MySQLInstanceConfig.exe -i -q '-lC:mysql_install_log.txt' '-nMySQL Server 5.0' '-pC:\Program FilesMySQLMySQL Server 5.0' -v5.0.45 '-tC:\Program FilesMySQLMySQL Server 5.0my-template.ini' '-cC:mytest.ini' ServerType=DEVELOPMENT DatabaseType=MIXED ConnectionUsage=DSS Port=3306 ServiceName=
+--->Se ha configurado correctamente la instancia para MySQL 5.0
+--->Iniciando la instalación del conector ODBC
+--->C:\Windows\system32\cmd.exe /c C: & cd.. & cd.. & cd.. & cd.. & cd.. & cd.. & cd.. & cd.. & cd.. & cd.. & cd C:\Users\Mirlay\Desktop\nuevos peritos\instalador\archivos\MySQL5.0 & start /wait mysql-connector-odbc-3.51.26-win32.msi /quiet /norestart
+--->Se ha instalado exitosamente el conector ODBC
+--->Se crea el ODBC dsapasoftware
+--->Copiando archivos de sistema...
+--->Inicia la creación de accesos directos
+--->Creando el acceso directo: C:\Users\Mirlay\Desktop\Apasoft.lnk hacia:C:\Program Files\apasoftware\Project1.exe
+--->Se ha creado exitosamene el acceso directo: C:\Users\Mirlay\Desktop\Apasoft.lnk hacia:C:\Program Files\apasoftware\Project1.exe
+--->Se termina de crear los accesos directos
+--->La Instalación se ha realizado exitosamente

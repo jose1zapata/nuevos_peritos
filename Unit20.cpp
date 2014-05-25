@@ -1,0 +1,210 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "Unit20.h"
+#include "Unit4.h"
+#include "Unit1.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm20 *Form20;
+//---------------------------------------------------------------------------
+__fastcall TForm20::TForm20(TComponent* Owner)
+        : TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+
+
+
+
+void __fastcall TForm20::Image3Click(TObject *Sender)
+{
+        Form20->Close();
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm20::ComboBox1Change(TObject *Sender)
+{
+        Form4->ComboBox1Change(Sender);
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm20::acomodar(TObject *Sender){
+
+        for (int i=0;i<Form4->SEGURO;i++)
+        {
+                if(Form4->Seguro[i][0]==Form1->Label35->Caption){
+                        ComboBox7->ItemIndex=i;
+                        break;
+                }
+        }
+        for (int i=0;i<Form4->TIPO;i++)
+        {
+                if(Form4->Tipo[i][0]==Form1->Label23->Caption){
+                        ComboBox3->ItemIndex=i;
+                        break;
+                }
+        }
+        for (int i=0;i<Form4->MARCA;i++)
+        {
+                if(Form4->Marca[i][0]==Form1->Label19->Caption){
+                        ComboBox1->ItemIndex=i;
+                        Form4->ComboBox1Change(Sender);
+                        for (int j=0;j<Form4->MODELO;j++)
+                        {
+                                if(Form4->Modelo[j][0]==Form1->Label21->Caption){
+                                        ComboBox2->ItemIndex=j;
+                                        break;
+                                }
+
+                        }
+
+                        break;
+                }
+        }
+        for (int i=0;i<Form4->COLOR;i++)
+        {
+                if(Form4->Colorete[i][0]==Form1->Label27->Caption){
+                        ComboBox4->ItemIndex=i;
+                }
+        }
+        for (int i=0;i<Form4->ANHO;i++)
+        {
+                if(Form4->Anho[i]==Form1->Label25->Caption){
+                        ComboBox5->ItemIndex=i;
+                        break;
+                }
+        }
+        for (int i=0;i<Form4->USO;i++)
+        {
+                if(Form4->Uso[i]==Form1->Label59->Caption){
+                        ComboBox6->ItemIndex=i;
+                        break;
+                }
+        }
+        Edit1->Text=Form1->Label29->Caption;//placa
+        Edit2->Text=Form1->Label31->Caption;//serialcarroceria
+        Edit3->Text=Form1->Label33->Caption;//serialmotor
+        Edit4->Text=Form1->Label37->Caption;//polizaseguro
+
+}
+
+void __fastcall TForm20::Edit1KeyPress(TObject *Sender, char &Key)
+{
+        Key=toupper(Key);
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm20::Edit2KeyPress(TObject *Sender, char &Key)
+{
+        Edit1KeyPress(Sender,Key);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm20::Edit3KeyPress(TObject *Sender, char &Key)
+{
+        Edit2KeyPress(Sender,Key);
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm20::Edit4KeyPress(TObject *Sender, char &Key)
+{
+        Edit3KeyPress(Sender,Key);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm20::Image2Click(TObject *Sender)
+{
+        String cadena,x,valor;
+        if(ComboBox1->ItemIndex!=-1&&ComboBox2->ItemIndex!=-1&&ComboBox3->ItemIndex!=-1&&ComboBox4->ItemIndex!=-1&&ComboBox5->ItemIndex!=-1&&ComboBox6->ItemIndex!=-1&&ComboBox7->ItemIndex!=-1){
+        cadena="update vehiculo set ";
+        cadena+="marca_id="+Form4->Marca[ComboBox1->ItemIndex][1]+", ";
+        cadena+="modelo_id="+Form4->Modelo[ComboBox2->ItemIndex][1]+", ";
+        cadena+="tipo_id="+Form4->Tipo[ComboBox3->ItemIndex][1]+",";
+        cadena+="color_id="+Form4->Colorete[ComboBox4->ItemIndex][1]+",";
+        cadena+="anho='"+Form4->Anho[ComboBox5->ItemIndex]+"',";
+        x=ComboBox6->ItemIndex+1;
+        cadena+="uso_id="+x+",";
+        cadena+="seguro_id="+Form4->Seguro[ComboBox7->ItemIndex][1]+",";
+        cadena+="serialcarroceria='"+Edit2->Text+"',";
+        cadena+="placa='"+Edit1->Text+"',";
+        cadena+="serialmotor='"+Edit3->Text+"',";
+        cadena+="numeropoliza='"+Edit4->Text+"', ";
+        cadena+="conductores_id="+Form1->Label17->Caption+" ";
+        cadena+="where id="+Form1->Label39->Caption;
+        Query1->Close();
+        Query1->SQL->Clear();
+        Query1->SQL->Add(cadena);
+        Query1->ExecSQL();
+        Form20->Close();
+        //------------------------
+        valor="select * from uso where id="+x;
+        Query1->Close();
+        Query1->SQL->Clear();
+        Query1->SQL->Add(valor);
+        Query1->Active=true;
+        Form1->Label59->Caption=Query1->FieldByName("nombre")->Value;//uso
+        //-------------------------
+        Form1->Label19->Caption=Form4->Marca[ComboBox1->ItemIndex][0];//marca
+        //--------------------------
+        Form1->Label21->Caption=Form4->Modelo[ComboBox2->ItemIndex][0];//modelo
+        //---------------------------
+        Form1->Label23->Caption=Form4->Tipo[ComboBox3->ItemIndex][0];//tipo
+        //-----------------------------
+        Form1->Label27->Caption=Form4->Colorete[ComboBox4->ItemIndex][0];//color
+        //-----------------------------
+        Form1->Label35->Caption=Form4->Seguro[ComboBox7->ItemIndex][0];//seguro
+        //------------------------------
+
+        Form1->Label25->Caption=Form4->Anho[ComboBox5->ItemIndex];//anho
+        Form1->Label37->Caption=Edit4->Text;//polizaseguro
+        Form1->Label33->Caption=Edit3->Text;//serialmotor
+        Form1->Label31->Caption=Edit2->Text;//serialcarroceria
+        Form1->Label29->Caption=Edit1->Text;//placa
+        MessageDlg("Modificado con éxito",mtInformation,TMsgDlgButtons()<<mbOK,0);
+        }else{
+                MessageDlg("Ninguna Lista de Selección puede quedar sin seleccionar algún elemento. Revisa que elemento quedó sin seleccionar",mtInformation,TMsgDlgButtons()<<mbOK,0);
+        }
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm20::Image4Click(TObject *Sender)
+{
+        Form4->Image5Click(Sender);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm20::Image5Click(TObject *Sender)
+{
+        Form4->Image6Click(Sender);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm20::Image6Click(TObject *Sender)
+{
+        Form4->Image7Click(Sender);        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm20::Image7Click(TObject *Sender)
+{
+        Form4->Image8Click(Sender);        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm20::Image8Click(TObject *Sender)
+{
+        Form4->Image10Click(Sender);        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm20::Image9Click(TObject *Sender)
+{
+        Form4->Image9Click(Sender);        
+}
+//---------------------------------------------------------------------------
+

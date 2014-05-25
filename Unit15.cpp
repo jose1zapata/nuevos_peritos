@@ -1,0 +1,199 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "Unit15.h"
+#include "Unit1.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm15 *Form15;
+
+//---------------------------------------------------------------------------
+__fastcall TForm15::TForm15(TComponent* Owner)
+        : TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm15::Image3Click(TObject *Sender)
+{
+        Form15->Close();
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm15::rellenar()
+{
+        String cadena,y,var;
+        int i=0;
+        cadena="select * from autopartes order by nombre asc";
+        Query1->Close();
+        Query1->SQL->Clear();
+        Query1->SQL->Add(cadena);
+        Query1->Active=true;
+        Query1->First();
+
+        ComboBox1->Clear();
+        ComboBox2->Clear();
+        ComboBox3->Clear();
+        ComboBox4->Clear();
+        ComboBox3->Text="Cam/Rep";
+        ComboBox4->Text="Cam/Rep";
+        ComboBox1->Text="Seleccione";
+        ComboBox2->Text="Seleccione";
+        while(!Query1->Eof){
+                y=Query1->FieldByName("tipoautoparte_id")->Value;
+                if(y==1){
+                        var=Query1->FieldByName("id")->Value;
+                        ComboBox1->Items->Add(var.UpperCase());
+                }else{
+                        var=Query1->FieldByName("id")->Value;
+                        ComboBox2->Items->Add(var.UpperCase());
+                }
+                Query1->Next();
+        }
+        cadena="select * from tipoautoparte";
+        Query1->Close();
+        Query1->SQL->Clear();
+        Query1->SQL->Add(cadena);
+        Query1->Active=true;
+        Query1->First();
+        while(!Query1->Eof){
+                todo[i][0]=var=Query1->FieldByName("nombre")->Value;
+                todo[i][1]=Query1->FieldByName("id")->Value;
+                ComboBox3->Items->Add(var.UpperCase());
+                ComboBox4->Items->Add(var.UpperCase());
+                Query1->Next();
+                i++;
+        }
+}
+void __fastcall TForm15::ComboBox1Change(TObject *Sender)
+{
+        Edit1->Text=Form1->reparar[ComboBox1->ItemIndex];
+        x=Form1->idreparar[ComboBox1->ItemIndex];
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm15::ComboBox2Change(TObject *Sender)
+{
+        Edit2->Text=Form1->cambiar[ComboBox2->ItemIndex];
+        y=Form1->idcambiar[ComboBox2->ItemIndex];
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm15::Image4Click(TObject *Sender)
+{
+        String cadena;
+        if(!x.IsEmpty()&&y.IsEmpty()){
+                cadena="delete from autopartes where id="+x;
+                y=1;
+        }
+        else{
+                if(!y.IsEmpty()&&x.IsEmpty()){
+                        cadena="delete from autopartes where id="+y;
+                        x=1;
+                }
+                else
+                        cadena="delete from autopartes where id="+x+" or id="+y;
+        }
+        if(!x.IsEmpty()&&!y.IsEmpty()){
+        Query1->Close();
+        Query1->SQL->Clear();
+        Query1->SQL->Add(cadena);
+        Query1->ExecSQL();
+        Edit1->Text="";
+        Edit2->Text="";
+        MessageDlg("Eliminado con éxito", mtInformation, TMsgDlgButtons() << mbOK, 0);
+        ComboBox1->Clear();
+        ComboBox2->Clear();
+        ComboBox3->Clear();
+        ComboBox4->Clear();
+        x=NULL;
+        y=NULL;
+        rellenar();
+        Form1->rellenar();
+        }else{
+                MessageDlg("Selecione un elemento a elimiar", mtInformation, TMsgDlgButtons() << mbOK, 0);
+        }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm15::Image2Click(TObject *Sender)
+{
+        String cadena;
+        if(!Edit1->Text.IsEmpty()){
+                if(ComboBox3->ItemIndex!=-1){
+                        cadena="UPDATE autopartes SET nombre='"+Edit1->Text+"', tipoautoparte_id="+todo[ComboBox3->ItemIndex][1]+" where id="+x;
+                        Query1->Close();
+                        Query1->SQL->Clear();
+                        Query1->SQL->Add(cadena);
+                        Query1->ExecSQL();
+                        MessageDlg("modificado "+Edit1->Text+" con éxito", mtInformation, TMsgDlgButtons() << mbOK, 0);
+                        Edit1->Text="";
+
+                        ComboBox1->Clear();
+                        ComboBox2->Clear();
+                        ComboBox3->Clear();
+
+                }else{
+                        MessageDlg("Seleccione si desea autoparte para cambiar o reparar", mtInformation, TMsgDlgButtons() << mbOK, 0);
+                }
+        }
+        if(!Edit2->Text.IsEmpty()){
+                if(ComboBox4->ItemIndex!=-1){
+                        cadena="UPDATE autopartes SET nombre='"+Edit2->Text+"', tipoautoparte_id="+todo[ComboBox4->ItemIndex][1]+" where id="+y;
+                        Query1->Close();
+                        Query1->SQL->Clear();
+                        Query1->SQL->Add(cadena);
+                        Query1->ExecSQL();
+                        MessageDlg("Modificado "+Edit2->Text+" con éxito", mtInformation, TMsgDlgButtons() << mbOK, 0);
+
+                        Edit2->Text="";
+                        ComboBox1->Clear();
+                        ComboBox2->Clear();
+                        ComboBox4->Clear();
+                }else{
+                        MessageDlg("Seleccione si desea autoparte para cambiar o reparar", mtInformation, TMsgDlgButtons() << mbOK, 0);
+                }
+        }
+        rellenar();
+        Form1->rellenar();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm15::Image5Click(TObject *Sender)
+{
+        MessageDlg("Si va a ELIMINAR, seleccione la pieza a borrar bien sea de cambio o de reparar\nSi desea 'MODIFICAR', seleccione la pieza a modificar y luego selecciona si desea que pase a cambiar o a reparar.", mtInformation, TMsgDlgButtons() << mbOK, 0);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm15::Image6Click(TObject *Sender)
+{
+        for (int i=0;i<Form1->totalreparar;i++)
+        {
+                if(Form1->idreparar[i]==Edit3->Text){
+                        ComboBox1->ItemIndex=i;
+                        ComboBox1Change(Sender);
+                        break;
+                }
+        }
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm15::Image7Click(TObject *Sender)
+{
+        for (int i=0;i<Form1->totalcambiar;i++)
+        {
+                if(Form1->idcambiar[i]==Edit4->Text){
+                        ComboBox2->ItemIndex=i;
+                        ComboBox2Change(Sender);
+                        break;
+                }
+        }
+
+}
+//---------------------------------------------------------------------------
+
